@@ -2,104 +2,54 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import api from "../../api/api";
+import Login from "./Auth/Login";
+import Register from "./Auth/Register";
 
 class Auth extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: null,
-            password: null,
             auth: "login"
         }
     }
 
-    handleInput = (e) => {
-        this.changeState(e.target.value, e.target.name);
-    }
-
-    handleAuth = (e) => {
-        this.setState({
-            auth: e.target.dataset.link
-        })
-    }
-
-    changeState = (text, name) => {
-        if (name === "password") {
-            this.setState({
-                password: text
-            });
-        } else if (name === "email") {
-            this.setState({
-                email: text
-            })
+    static getDerivedStateFromProps = (props, state) => {
+        // Store prevWorkId in state so we can compare when props change.
+        // Clear out previously-loaded work (so we don't render stale stuff).
+        let auth;
+        if (props.match.path === "/auth/login"){
+            auth = "login";
+        } else if (props.match.path === "/auth/register"){
+            auth = "register";
+        }
+        if (state.auth !== auth) {
+            return {
+                auth: auth
+            }
+        }else{
+            return null
         }
     }
 
 
-    login = () => {
-        //url for logign
-        let url = "http://127.0.0.1:8000/api/login";
-        let data = {
-            password: this.state.password,
-            email: this.state.email
-        };
-        api.post(url, data).then(res => {
-            console.log(res);
-        });
+    componentDidMount(){
+        if (this.props.match.path === "/auth/login"){
+            this.setState({
+                auth : "login"
+            })
+        } else if (this.props.match.path === "/auth/register"){
+            this.setState({
+                auth : "register"
+            })
+        }
     }
 
     render() {
         let renderAuth;
         if (this.state.auth === "login") {
-            renderAuth = (
-                <div className="w-50 m-auto text-center">
-                    <h1 className="h3 mb-3 font-weight-normal">Connectez vous</h1>
-                    <div className="form-group">
-                        <label htmlFor="inputEmail" className="sr-only">Email address</label>
-                        <input type="email" id="inputEmail" name="email" className="form-control"
-                               placeholder="Email address" required autoFocus onChange={this.handleInput.bind(this)}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="inputPassword" className="sr-only">Password</label>
-                        <input type="password" id="inputPassword" name="password" className="form-control"
-                               placeholder="Password" required onChange={this.handleInput.bind(this)}/>
-                    </div>
-                    <button className="btn btn-lg btn-primary btn-block" onClick={this.login} type="submit">Connectez
-                                                                                                            vous
-                    </button>
-
-                    <span data-link="register" className="cursor mt-4" onClick={this.handleAuth}>S'inscire</span>
-                </div>
-            );
+            renderAuth = (<Login />);
         } else if (this.state.auth === "register") {
-            renderAuth = (
-                <div className="w-50 m-auto text-center">
-                    <h1 className="h3 mb-3 font-weight-normal">Inscrivez vous</h1>
-                    <div className="form-group">
-                        <label htmlFor="inputEmail" className="sr-only">Pseudo</label>
-                        <input type="email" id="inputEmail" name="email" className="form-control"
-                               placeholder="Email address" required autoFocus onChange={this.handleInput.bind(this)}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="inputEmail" className="sr-only">Email address</label>
-                        <input type="email" id="inputEmail" name="email" className="form-control"
-                               placeholder="Email address" required autoFocus onChange={this.handleInput.bind(this)}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="inputPassword" className="sr-only">Password</label>
-                        <input type="password" id="inputPassword" name="password" className="form-control"
-                               placeholder="Password" required onChange={this.handleInput.bind(this)}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="inputPassword" className="sr-only">Confirm Password</label>
-                        <input type="password" id="inputPassword" name="password" className="form-control"
-                               placeholder="Password" required onChange={this.handleInput.bind(this)}/>
-                    </div>
-                    <button className="btn btn-lg btn-primary btn-block" onClick={this.login} type="submit">S'inscire
-                    </button>
-                    <span data-link="login" className="cursor mt-4" onClick={this.handleAuth}>Se connecter</span>
-                </div>
-            );
+            renderAuth = (<Register />);
         }
         return (
             <div className="container">

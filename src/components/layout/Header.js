@@ -18,7 +18,7 @@ class Header extends Component {
                         <Link to={`/`} component={Home} className="nav-link">
                             Accueil
                         </Link>
-                        <Link to={`/auth`} component={Auth} className="nav-link">
+                        <Link to={`/auth/login`} component={Auth} className="nav-link">
                             Login
                         </Link>
                         <Link to={`/app`} component={Main}  className="nav-link">
