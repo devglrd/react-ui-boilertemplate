@@ -14,32 +14,24 @@ class Auth extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
-        // Store prevWorkId in state so we can compare when props change.
-        // Clear out previously-loaded work (so we don't render stale stuff).
-        let auth;
-        if (props.match.path === "/auth/login"){
-            auth = "login";
-        } else if (props.match.path === "/auth/register"){
-            auth = "register";
-        }
-        if (state.auth !== auth) {
+        if (state.auth !== props.match.params.auth) {
             return {
-                auth: auth
+                auth: props.match.params.auth
             }
         }else{
             return null
         }
-    }
+    };
 
 
     componentDidMount(){
-        if (this.props.match.path === "/auth/login"){
+        if (this.props.match.params.auth === "login"){
             this.setState({
-                auth : "login"
+                auth : this.props.match.params.auth
             })
-        } else if (this.props.match.path === "/auth/register"){
+        } else if (this.props.match.path === "register"){
             this.setState({
-                auth : "register"
+                auth : this.props.match.params.auth
             })
         }
     }

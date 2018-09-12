@@ -7,9 +7,31 @@ import Main from '../app/Main';
 import Home from '../app/Home';
 class Header extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: null
+        }
+    }
 
+    componentDidMount (){
+        const user = sessionStorage.getItem('user');
+        if (user){
+            this.setState({
+                user : user
+            });
+        }
+    }
 
     render() {
+        let renderNavbar;
+        if (this.state.user != null){
+            renderNavbar = (<div className="d-flex ml-3"><Link to={`/auth/logout`} component={Auth} className="nav-link">Logout</Link><Link to={`/app`} component={Main}  className="nav-link">
+                Application
+            </Link></div>)
+        } else{
+            renderNavbar = (<Link to={`/auth/login`} component={Auth} className="nav-link">login</Link>)
+        }
         return (
             <header className="masthead mb-auto container">
                 <div className="inner">
@@ -18,12 +40,7 @@ class Header extends Component {
                         <Link to={`/`} component={Home} className="nav-link">
                             Accueil
                         </Link>
-                        <Link to={`/auth/login`} component={Auth} className="nav-link">
-                            Login
-                        </Link>
-                        <Link to={`/app`} component={Main}  className="nav-link">
-                            Application
-                        </Link>
+                        {renderNavbar}
                     </nav>
                 </div>
             </header>

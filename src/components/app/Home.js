@@ -2,6 +2,18 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 class Home extends Component {
+
+    componentDidMount(){
+
+    }
+
+    getUser = () => {
+        const user = localStorage.getItem("user");
+        console.log(user);
+        if (user) {
+            return;
+        }
+    }
     render() {
         return (
             <main role="main" className="inner cover container">
@@ -10,7 +22,7 @@ class Home extends Component {
                                     Download, edit the text, and add your own fullscreen background photo to make it
                                     your own.</p>
                 <p className="lead">
-                    <a href="#" className="btn btn-lg btn-secondary">Learn more</a>
+                    <a href="#" className="btn btn-lg btn-secondary" onClick={this.getUser}>Learn more</a>
                 </p>
             </main>
 
